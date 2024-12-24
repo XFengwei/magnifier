@@ -1,6 +1,4 @@
 # magnifier
-# magnifier
-# magnifier
-# magnifier
-# magnifier
-# magnifier
+
+To magnify the large mosaics by ALMA
+
