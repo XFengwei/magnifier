@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,22 +9,12 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <select id="target-selector">
-        <option value="SgrC" selected>Sgr C</option>
-        <option value="cloude">cloude</option>
-        <option value="The20kmsCloud">The20kmsCloud</option>
-        <!-- <option value="TargetB">Target B</option> -->
-    </select>
-
     <button id="toggle-button">Show sources</button>
     <div id="figure-label">Plain colormap</div>
-
     <div class="image-container">
-        <img src="SgrC_plain.png" alt="Astronomical target" class="large-image" id="large-image">
+        <img src="SgrC_plain.png" alt="Sgr C" class="large-image" id="large-image">
         <div class="magnifier" id="magnifier"></div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
-

@@ -1,0 +1,48 @@
+const imageContainer = document.querySelector('.image-container');
+const largeImage = document.querySelector('.large-image');
+const magnifier = document.getElementById('magnifier');
+const toggleButton = document.getElementById('toggle-button');
+const figureLabel = document.getElementById('figure-label');
+
+// define the images
+const images = [
+    { src: "SgrC_plain.png", label: "Plain colormap", button: "Show sources" },
+    { src: "SgrC_sources.png", label: "Show sources", button: "Plain colormap" }
+];
+
+let currentImageIndex = 0;
+
+// switching toggle
+toggleButton.addEventListener('click', () => {
+    // next idx
+    currentImageIndex = (currentImageIndex + 1) % images.length;
+
+    // update images
+    largeImage.src = images[currentImageIndex].src;
+    figureLabel.textContent = images[currentImageIndex].label;
+    toggleButton.textContent = images[currentImageIndex].button;
+});
+
+// Magnifier
+imageContainer.addEventListener('mousemove', (e) => {
+    const rect = imageContainer.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    magnifier.style.display = 'block';  // Shows magnifier
+    magnifier.style.left = `${x}px`;    // Positions magnifier horizontally
+    magnifier.style.top = `${y}px`;     // Positions magnifier vertically
+
+    // Calculate magnifier background offset
+    const backgroundX = ((x / rect.width) * 100);
+    const backgroundY = ((y / rect.height) * 100);
+
+    magnifier.style.backgroundImage = `url(${largeImage.src})`;
+    magnifier.style.backgroundPosition = `${backgroundX}% ${backgroundY}%`;
+    magnifier.style.transform = `translate(-50%, -50%)`;
+});
+
+// hide the magnifier if outside the boundary
+imageContainer.addEventListener('mouseleave', () => {
+    magnifier.style.display = 'none';
+});

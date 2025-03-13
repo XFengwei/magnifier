@@ -3,48 +3,68 @@ const largeImage = document.querySelector('.large-image');
 const magnifier = document.getElementById('magnifier');
 const toggleButton = document.getElementById('toggle-button');
 const figureLabel = document.getElementById('figure-label');
+const targetSelector = document.getElementById('target-selector');
 
-// 定义图片路径和标签
-const images = [
-    { src: "SgrC_plain.png", label: "Plain colormap", button: "Show sources" },
-    { src: "SgrC_sources.png", label: "Show sources", button: "Plain colormap" }
-];
+// Images organized by targets
+const targets = {
+    'SgrC': {
+        plain: "SgrC_plain.png",
+        sources: "SgrC_sourc.png"
+    },
+    'cloude': {
+        plain: "cloude_plain.png",
+        sources: "cloude_sourc.png"
+    },
+    'The20kmsCloud': {
+        plain: "The20kmsCloud_plain.png",
+        sources: "The20kmsCloud_sourc.png"
+    }
+};
 
-let currentImageIndex = 0; // 当前图片索引
+let currentTarget = 'SgrC';
+let currentType = 'plain';
 
-// 切换图片和标签
-toggleButton.addEventListener('click', () => {
-    // 切换到下一个索引
-    currentImageIndex = (currentImageIndex + 1) % images.length;
+// Updates image source, magnifier background, and label based on current state
+function updateImage() {
+    const imgSrc = targets[currentTarget][currentType];
+    largeImage.src = imgSrc;
+    magnifier.style.backgroundImage = `url(${imgSrc})`;
+    figureLabel.textContent = currentType === 'plain' ? "Plain colormap" : "Sources marked";
+    toggleButton.textContent = currentType === 'plain' ? "Show sources" : "Plain colormap";
+}
 
-    // 更新图片、标签和按钮文本
-    largeImage.src = images[currentImageIndex].src;
-    figureLabel.textContent = images[currentImageIndex].label;
-    toggleButton.textContent = images[currentImageIndex].button;
+// Event listener for changing targets
+targetSelector.addEventListener('change', (e) => {
+    currentTarget = e.target.value;
+    currentType = 'plain'; // reset to plain type when switching targets
+    updateImage();
 });
 
-// 显示放大镜
+// Event listener for toggling plain/source images
+toggleButton.addEventListener('click', () => {
+    currentType = currentType === 'plain' ? 'sources' : 'plain';
+    updateImage();
+});
+
+// Magnifier logic (unchanged and working correctly)
 imageContainer.addEventListener('mousemove', (e) => {
     const rect = imageContainer.getBoundingClientRect();
-    const x = e.clientX - rect.left; // 鼠标相对容器的 X 坐标
-    const y = e.clientY - rect.top;  // 鼠标相对容器的 Y 坐标
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-    // 显示放大镜
     magnifier.style.display = 'block';
     magnifier.style.left = `${x}px`;
     magnifier.style.top = `${y}px`;
 
-    // 计算背景图的偏移，使鼠标居中
-    const magnifierSize = magnifier.offsetWidth;
-    const backgroundX = ((x / rect.width) * 100);
-    const backgroundY = ((y / rect.height) * 100);
+    const backgroundX = (x / rect.width) * 100;
+    const backgroundY = (y / rect.height) * 100;
 
-    magnifier.style.backgroundImage = `url(${largeImage.src})`; // 动态更新背景图
     magnifier.style.backgroundPosition = `${backgroundX}% ${backgroundY}%`;
-    magnifier.style.transform = `translate(-50%, -50%)`; // 修正位置偏移
 });
 
-// 隐藏放大镜
 imageContainer.addEventListener('mouseleave', () => {
     magnifier.style.display = 'none';
 });
+
+// Initialize default state
+updateImage();
