@@ -1,0 +1,59 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: black; /* #f4f4f4 */
+}
+
+.image-container {
+    position: relative;
+    width: 80%;
+    max-width: 1200px;
+    overflow: hidden;
+}
+
+.large-image {
+    width: 100%;
+    display: block;
+    cursor: zoom-in;
+}
+
+.magnifier {
+    position: absolute;
+    width: 400px; /* 放大镜的宽度 */
+    height: 400px; /* 放大镜的高度 */
+    border: 2px solid gray;
+    border-radius: 50%;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-size: 600%; /* 放大倍数 */
+    display: none; /* 默认隐藏 */
+    transform: translate(-50%, -50%); /* 确保放大镜中心对齐鼠标 */
+}
+
+#toggle-button, #figure-label {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 16px;
+    font-family: 'Times New Roman', serif; /* 使用Times New Roman字体 */
+    font-weight: bold; /* 字体加粗 */
+    padding: 5px 10px;
+    background-color: #444; /* 按钮背景颜色 */
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 1000; /* 确保位于最上层 */
+}
+
+#figure-label {
+    position: absolute;
+    top: 50px; /* 位于按钮下方 */
+    right: 10px;
+    font-size: 16px;
+    color: white;
+}
+
+
