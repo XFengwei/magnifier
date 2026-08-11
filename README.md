@@ -1,5 +1,7 @@
 # DUET field explorer
 
+[**Open the interactive magnifier →**](https://xfengwei.github.io/magnifier/)
+
 This is a dependency-free static page. GitHub Pages can serve `index.html`,
 `styles.css`, and `script.js` directly; there is no framework, package install, or
 build step.
