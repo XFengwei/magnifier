@@ -1,28 +1,157 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Magnifier</title>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#070b12">
+    <meta
+      name="description"
+      content="An interactive, cursor-centered view of the DUET ALMA dual-band mosaics."
+    >
+    <title>DUET field explorer · Fengwei Xu</title>
+    <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <select id="target-selector">
-        <option value="SgrC" selected>Sgr C</option>
-        <option value="cloude">cloude</option>
-        <option value="The20kmsCloud">The20kmsCloud</option>
-        <!-- <option value="TargetB">Target B</option> -->
-    </select>
+    <script type="module" src="script.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#explorer">Skip to the field explorer</a>
 
-    <button id="toggle-button">Show sources</button>
-    <div id="figure-label">Plain colormap</div>
+    <header class="site-header">
+      <a class="wordmark" href="/research/" aria-label="Fengwei Xu research page">
+        <span>Fengwei Xu</span>
+        <span class="wordmark__project">/ DUET</span>
+      </a>
+      <a class="back-link" href="/research/">
+        <svg aria-hidden="true" viewBox="0 0 20 20">
+          <path d="M11.8 4.2 6 10l5.8 5.8"></path>
+        </svg>
+        Research
+      </a>
+    </header>
 
-    <div class="image-container">
-        <img src="SgrC_plain.png" alt="Astronomical target" class="large-image" id="large-image">
-        <div class="magnifier" id="magnifier"></div>
-    </div>
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">CONCERT · DUET field explorer</p>
+        <h1 id="page-title">Look closer at the Galactic Center.</h1>
+        <p class="hero__lede">
+          Explore matched-resolution ALMA mosaics of three Central Molecular Zone clouds.
+          Move across a field to inspect its local structure, then reveal the cataloged
+          compact sources without losing your place.
+        </p>
+        <div class="band-key" aria-label="Image color key">
+          <span><i class="band-key__swatch band-key__swatch--cyan"></i>ALMA 1.3 mm</span>
+          <span><i class="band-key__swatch band-key__swatch--red"></i>ALMA 3 mm</span>
+          <span><i class="band-key__ring"></i>Cataloged source</span>
+        </div>
+      </section>
 
-    <script src="script.js"></script>
-</body>
+      <section class="explorer" id="explorer" aria-labelledby="viewer-title">
+        <header class="explorer__header">
+          <div>
+            <p class="eyebrow">Interactive plate</p>
+            <h2 id="viewer-title">Sgr C</h2>
+          </div>
+          <p id="mode-readout">Dual-color composite</p>
+        </header>
+
+        <div class="controls" aria-label="Viewer controls">
+          <label class="control control--target" for="target-select">
+            <span class="control__label">Target</span>
+            <span class="select-wrap">
+              <select id="target-select">
+                <option value="sgr-c">Sgr C</option>
+                <option value="cloud-e">Dust Ridge cloud e</option>
+                <option value="20kms">20 km s⁻¹ cloud</option>
+              </select>
+              <svg aria-hidden="true" viewBox="0 0 20 20">
+                <path d="m6 8 4 4 4-4"></path>
+              </svg>
+            </span>
+          </label>
+
+          <div class="control control--view">
+            <span class="control__label">View</span>
+            <div class="segmented-control" role="group" aria-label="Image view">
+              <button class="view-button" type="button" data-view="plain" aria-pressed="true">
+                Image
+              </button>
+              <button class="view-button" type="button" data-view="sources" aria-pressed="false">
+                Sources
+              </button>
+            </div>
+          </div>
+
+          <label class="control control--zoom" for="zoom-range">
+            <span class="control__label">
+              Zoom
+              <output id="zoom-output" for="zoom-range">4×</output>
+            </span>
+            <input id="zoom-range" type="range" min="2" max="8" step="0.5" value="4">
+          </label>
+
+          <button class="reset-button" id="reset-button" type="button">
+            <svg aria-hidden="true" viewBox="0 0 20 20">
+              <path d="M15.7 6.2A7 7 0 1 0 17 10M16 3v4h-4"></path>
+            </svg>
+            Reset
+          </button>
+        </div>
+
+        <div class="viewer-card" id="viewer-card">
+          <div
+            class="viewer"
+            id="viewer"
+            tabindex="0"
+            aria-label="Interactive DUET mosaic. Move the pointer over the image to magnify it."
+            aria-describedby="viewer-help"
+          >
+            <div class="media-stage" id="media-stage" aria-busy="true">
+              <img
+                class="field-image"
+                id="field-image"
+                alt="Dual-band ALMA mosaic of Sgr C"
+                draggable="false"
+              >
+
+              <div class="magnifier" id="magnifier" aria-hidden="true">
+                <div class="magnifier__viewport" id="magnifier-viewport">
+                  <img class="magnifier__image" id="magnifier-image" alt="" draggable="false">
+                </div>
+                <span class="magnifier__crosshair" aria-hidden="true"></span>
+                <span class="magnifier__badge" id="magnifier-badge">4×</span>
+              </div>
+
+              <div class="loading-state" id="loading-state" role="status" aria-live="polite">
+                <span class="loading-state__orbit" aria-hidden="true"></span>
+                <span id="loading-message">Loading Sgr C…</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="viewer-card__footer">
+            <p id="viewer-help">
+              <span class="pointer-help">Move to inspect · Arrow keys nudge · +/− changes zoom</span>
+              <span class="touch-help">Tap or drag to inspect · Tap Reset to return to center</span>
+            </p>
+            <p id="position-readout">Frame center · x 50.0% · y 50.0%</p>
+          </div>
+        </div>
+
+        <p class="method-note">
+          The cursor position is calculated in normalized image coordinates. Each source-marked
+          export is registered to the same field footprint before it is magnified, so changing
+          views preserves the sampled location.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Dual-band Unified Exploration of Three CMZ Clouds</p>
+      <a href="https://cmzconcert.github.io/#programs">About the DUET program</a>
+    </footer>
+
+    <noscript>
+      <p class="noscript-message">This interactive viewer requires JavaScript.</p>
+    </noscript>
+  </body>
 </html>
-
